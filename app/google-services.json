@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "815012707766",
+    "project_id": "chat-one-1337"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:815012707766:android:ff7c65dbdd9e35dc",
+        "android_client_info": {
+          "package_name": "com.magedmilad.chatone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "815012707766-7tidknolt50uf15iqo54gfv4bbh48dqo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.magedmilad.chatone",
+            "certificate_hash": "1AD7996E4DB3C1A2D62C594B475B6B983C804B3F"
+          }
+        },
+        {
+          "client_id": "815012707766-g196qg0l0crnl61rakocqhcfqvgb4k9m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuO8Vj5gCTjmARQQAtfOWlvH3iN5Mr5mg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
