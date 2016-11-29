@@ -20,16 +20,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Query;
-import com.firebase.client.Firebase;
-
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.magedmilad.chatone.Model.ChatMessage;
 import com.magedmilad.chatone.Utils.Constants;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+
+
 
 /**
  * This class is a generic way of backing an RecyclerView with a Firebase location.
@@ -110,7 +110,7 @@ public abstract class FirebaseMessageRecyclerAdapter<T, VH extends RecyclerView.
     }
 
 
-    public FirebaseMessageRecyclerAdapter(Class<T> modelClass, Class<VH> viewHolderClass, Firebase ref,String currentUserEmail) {
+    public FirebaseMessageRecyclerAdapter(Class<T> modelClass, Class<VH> viewHolderClass, DatabaseReference ref,String currentUserEmail) {
         this(modelClass, viewHolderClass, (Query) ref, currentUserEmail);
     }
 
@@ -139,7 +139,7 @@ public abstract class FirebaseMessageRecyclerAdapter<T, VH extends RecyclerView.
         return snapshot.getValue(mModelClass);
     }
 
-    public Firebase getRef(int position) {
+    public DatabaseReference getRef(int position) {
         return mSnapshots.getItem(position).getRef();
     }
 

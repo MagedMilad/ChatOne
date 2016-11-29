@@ -3,28 +3,30 @@ package com.magedmilad.chatone.login;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
 
-import com.firebase.client.AuthData;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.magedmilad.chatone.MainActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.magedmilad.chatone.Model.User;
 import com.magedmilad.chatone.R;
 import com.magedmilad.chatone.Utils.Constants;
+import com.magedmilad.chatone.Utils.SaveUserTask;
 import com.magedmilad.chatone.Utils.Utils;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -32,7 +34,6 @@ import java.util.ArrayList;
 public class Registration extends AppCompatActivity {
 
     private String mUserName, mUserEmail, mPassword;
-    private Firebase mFirebaseRef;
     private EditText mUserNameEditText, mUserEmailEditText, mPasswordEditText;
     private ProgressDialog mProgressDialog;
     private CircularImageView mAvatarImage;
@@ -44,7 +45,7 @@ public class Registration extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mFirebaseRef = new Firebase(Constants.BASE_URL);
+
         mUserNameEditText = (EditText) findViewById(R.id.input_name);
         mUserEmailEditText = (EditText) findViewById(R.id.input_email);
         mPasswordEditText = (EditText) findViewById(R.id.input_password);
@@ -54,13 +55,10 @@ public class Registration extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Your Avatar"), Constants.GET_FROM_GALLERY);
-
+                intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, Constants.GET_FROM_GALLERY);
             }
         });
-        Firebase.setAndroidContext(this);
-
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setTitle("Loading");
         mProgressDialog.setMessage("Creating your Account");
@@ -72,6 +70,7 @@ public class Registration extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.GET_FROM_GALLERY && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
+
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
             Cursor cursor = getContentResolver().query(selectedImage,
@@ -84,14 +83,10 @@ public class Registration extends AppCompatActivity {
 
             mAvatarImage.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             mAvatarUri = Uri.fromFile(new File(picturePath));
-
         }
     }
 
-
-
     public void onSignupButtonClick(View v) {
-
         mUserName = mUserNameEditText.getText().toString();
         mUserEmail = mUserEmailEditText.getText().toString();
         mPassword = mPasswordEditText.getText().toString();
@@ -101,45 +96,39 @@ public class Registration extends AppCompatActivity {
 
         mProgressDialog.show();
 
-        mFirebaseRef.createUser(mUserEmail, mPassword, new Firebase.ResultHandler() {
-            @Override
-            public void onSuccess() {
-                mFirebaseRef.authWithPassword(mUserEmail, mPassword,
-                        new Firebase.AuthResultHandler() {
-                            @Override
-                            public void onAuthenticated(AuthData authData) {
-                                Firebase users = mFirebaseRef.child("users");
-                                ArrayList<String> friends = new ArrayList<String>();
-                                ArrayList<String> chatRoomId = new ArrayList<String>();
-                                friends.add(Constants.GLOBAL_EMAIL+"#Global");
-                                chatRoomId.add("0");
-                                User currentUser = new User(mUserName, friends, chatRoomId, encodeImage(mAvatarUri));
-                                String newEmail = Utils.encriptEmail(mUserEmail);
-                                users.child(newEmail).setValue(currentUser);
-                                Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                                mProgressDialog.dismiss();
-                                startActivity(intent);
-                                finish();
-                            }
+        final FirebaseAuth auth = FirebaseAuth.getInstance();
 
-                            @Override
-                            public void onAuthenticationError(FirebaseError error) {
-                                Utils.showErrorToast(Registration.this,error.toString());
-                                mProgressDialog.dismiss();
-                            }
-                        });
-            }
-
-            @Override
-            public void onError(FirebaseError firebaseError) {
-                mProgressDialog.dismiss();
-            }
-        });
-
+        auth.createUserWithEmailAndPassword(mUserEmail, mPassword)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        addGlobalFriend();
+                        auth.signInWithEmailAndPassword(mUserEmail, mPassword)
+                                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                    @Override
+                                    public void onSuccess(AuthResult authResult) {
+                                        new SaveUserTask(mUserEmail, mUserName, Registration.this, mProgressDialog).execute(mAvatarUri);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(Exception e) {
+                                        Utils.showErrorToast(Registration.this, e.getCause().toString());
+                                        mProgressDialog.dismiss();
+                                    }
+                                });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        mProgressDialog.dismiss();
+                    }
+                });
     }
 
-
     private boolean isEmailValid(String email) {
+        //TODO : check email a@a.a error
         boolean isGoodEmail =
                 (email != null && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches());
         if (!isGoodEmail) {
@@ -161,22 +150,26 @@ public class Registration extends AppCompatActivity {
     }
 
 
-    private String encodeImage(Uri uri) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 7;
-        Bitmap bitmap = null;
-        if(uri!= null) {
-            bitmap = BitmapFactory.decodeFile(uri.getPath(), options);
-        }
-        else{
-            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_avatar, options);
-        }
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] bytes = baos.toByteArray();
-        String base64Image = Base64.encodeToString(bytes, Base64.DEFAULT);
-        return base64Image;
+    private void addGlobalFriend() {
+//        final DatabaseReference users = Utils.getDatabase().getReference().child("users");
+//        final String newEmail = Utils.encriptEmail(Constants.GLOBAL_EMAIL);
+        final DatabaseReference user =  Utils.getUser(Constants.GLOBAL_EMAIL);
+        user.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User global = dataSnapshot.getValue(User.class);
+                if (global == null) {
+                    String link = "https://firebasestorage.googleapis.com/v0/b/firebase-chat-one.appspot.com/o/network-icon-1910.png?alt=media&token=fbcf3113-fda9-4c43-b70a-9054350c4b31";
+                    ArrayList<String> chatRoomId = new ArrayList<>();
+                    chatRoomId.add("0");
+                    user.setValue(new User("Global", new ArrayList<String>(), chatRoomId, link, "Meet new Friends here"));
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+            }
+        });
     }
 
 }
