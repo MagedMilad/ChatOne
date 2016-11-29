@@ -8,10 +8,10 @@ package com.magedmilad.chatone;
 //import com.google.firebase.database.DatabaseError;
 //import com.google.firebase.database.Query;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
 //import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
@@ -90,7 +90,7 @@ class FirebaseArray implements ChildEventListener {
     }
 
     @Override
-    public void onCancelled(FirebaseError firebaseError) {
+    public void onCancelled(DatabaseError firebaseError) {
 
     }
 

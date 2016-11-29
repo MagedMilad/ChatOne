@@ -3,6 +3,7 @@ package com.magedmilad.chatone;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -11,7 +12,7 @@ import com.mikhaellopez.circularimageview.CircularImageView;
  * Created by magedmilad on 6/14/16.
  */
 public class ChatHolder extends RecyclerView.ViewHolder {
-    View mView;
+    public View mView;
 
     public ChatHolder(View itemView) {
         super(itemView);
@@ -27,4 +28,9 @@ public class ChatHolder extends RecyclerView.ViewHolder {
         CircularImageView field = (CircularImageView) mView.findViewById(R.id.message_circular_image_view);
         field.setImageBitmap(bm);
     }
+
+    public ImageView getImageView(){
+        return (ImageView) mView.findViewById(R.id.message_circular_image_view);
+    }
+
 }

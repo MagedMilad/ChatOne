@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
-        android:id="@+id/friend_email_text_view" />
+        android:id="@+id/status_text_view" />
 
     </LinearLayout>
 

@@ -1,34 +1,31 @@
 package com.magedmilad.chatone.Utils;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v7.app.NotificationCompat;
-import android.util.Base64;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.magedmilad.chatone.Model.User;
 import com.magedmilad.chatone.R;
-import com.mikhaellopez.circularimageview.CircularImageView;
+import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayOutputStream;
-import java.util.Arrays;
 
-/**
- * Created by magedmilad on 6/13/16.
- */
 public class Utils {
+    private static FirebaseDatabase mDatabase;
 
     public static void showErrorToast(Context context,String message) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
@@ -49,8 +46,7 @@ public class Utils {
             return true;
         email = encriptEmail(email);
         for(String s : user.getFriends()){
-            String userEmail = s.substring(0,s.indexOf("#"));
-            if(userEmail.equals(email)){
+            if(s.equals(email)){
                 return true;
             }
         }
@@ -80,9 +76,59 @@ public class Utils {
         notificationManager.notify(0, notification);
     }
 
-    public static String[] split(String friend){
-        return friend.split("#");
+    public static void setUserView(final Activity context, final String email, final View view){
+        getUser(email).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                ImageView iv = (ImageView) view.findViewById(R.id.friend_circular_image_view);
+                Picasso.with(context).load(decriptEmail(user.getAvatarUri())).into(iv);
+                ((TextView) view.findViewById(R.id.status_text_view)).setText(user.getStatus());
+                ((TextView) view.findViewById(R.id.friend_name_text_view)).setText(user.getUserName());
+            }
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+            }
+        });
+
     }
+
+    public static void setUserImageView(final Activity context, final String email, final ImageView view){
+        getUser(email).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                Picasso.with(context).load(decriptEmail(user.getAvatarUri())).into(view);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+            }
+        });
+    }
+
+    private static DatabaseReference getDatabase() {
+        if (mDatabase == null) {
+            mDatabase = FirebaseDatabase.getInstance();
+            mDatabase.setPersistenceEnabled(true);
+        }
+        return mDatabase.getReference();
+    }
+
+    public static DatabaseReference getUser(String email){
+        return getDatabase().child("users").child(encriptEmail(email));
+    }
+
+
+    public static DatabaseReference getChat(String chatRoomId){
+        return getDatabase().child("chat").child(chatRoomId);
+    }
+
+    public static DatabaseReference getChats(){
+        return getDatabase().child("chat");
+    }
+
+
 
 
 }
