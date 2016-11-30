@@ -1,19 +1,21 @@
 {
   "project_info": {
-    "project_number": "815012707766",
-    "project_id": "chat-one-1337"
+    "project_number": "209932107319",
+    "firebase_url": "https://chat-one.firebaseio.com",
+    "project_id": "firebase-chat-one",
+    "storage_bucket": "firebase-chat-one.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:815012707766:android:ff7c65dbdd9e35dc",
+        "mobilesdk_app_id": "1:209932107319:android:ff7c65dbdd9e35dc",
         "android_client_info": {
           "package_name": "com.magedmilad.chatone"
         }
       },
       "oauth_client": [
         {
-          "client_id": "815012707766-7tidknolt50uf15iqo54gfv4bbh48dqo.apps.googleusercontent.com",
+          "client_id": "209932107319-h7m8ac5o4uivoadl8v7hkguakptsjf88.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.magedmilad.chatone",
@@ -21,13 +23,13 @@
           }
         },
         {
-          "client_id": "815012707766-g196qg0l0crnl61rakocqhcfqvgb4k9m.apps.googleusercontent.com",
+          "client_id": "209932107319-pvkhjlo7f636n29o36tdkqi02f3eecg6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDuO8Vj5gCTjmARQQAtfOWlvH3iN5Mr5mg"
+          "current_key": "AIzaSyC5JzXDutokBwSpBtkeyW0RpnzVXB8qTKQ"
         }
       ],
       "services": {
@@ -35,11 +37,23 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "209932107319-pvkhjlo7f636n29o36tdkqi02f3eecg6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "209932107319-oed928ru7nf5em0n1df0qc1rok5ugafc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.magedmilad.chatone"
+              }
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }
