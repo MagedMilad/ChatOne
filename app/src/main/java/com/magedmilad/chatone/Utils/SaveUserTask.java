@@ -3,6 +3,7 @@ package com.magedmilad.chatone.Utils;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -15,6 +16,8 @@ import com.google.firebase.storage.UploadTask;
 import com.magedmilad.chatone.MainActivity;
 import com.magedmilad.chatone.Model.User;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -22,7 +25,7 @@ public class SaveUserTask extends AsyncTask<Uri, Void, Void> {
     private String mUserEmail;
     private String mUserName;
     private Activity mActivity;
-private ProgressDialog mProgressDialog;
+    private ProgressDialog mProgressDialog;
 
 
     public SaveUserTask(String userEmail, String userName, Activity a,ProgressDialog progressDialog){
@@ -43,8 +46,25 @@ private ProgressDialog mProgressDialog;
         StorageReference photoRef = storageRef.child("photos")
                 .child(urls[0].getLastPathSegment());
 
-        UploadTask ut = photoRef.putFile(urls[0]);
-                ut.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        //TODO :refactor
+        Bitmap bitmap;
+        try {
+            bitmap = Utils.getResizedBitmap(mActivity.getContentResolver().openInputStream(urls[0]));
+//            InputStream input = mActivity.getContentResolver().openInputStream(urls[0]);
+//            bitmap = BitmapFactory.decodeStream(input);
+//            input.close();
+//            bitmap = MediaStore.Images.Media.getBitmap(mActivity.getContentResolver(), urls[0]);
+        } catch (IOException e) {
+            e.printStackTrace();
+            bitmap = Bitmap.createBitmap(null);
+        }
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask ut = photoRef.putBytes(data);
+        ut.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
                 Uri downloadLink = taskSnapshot.getMetadata().getDownloadUrl();

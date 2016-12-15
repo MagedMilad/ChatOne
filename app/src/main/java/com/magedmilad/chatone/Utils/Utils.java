@@ -6,6 +6,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v7.app.NotificationCompat;
@@ -23,6 +25,8 @@ import com.magedmilad.chatone.Model.User;
 import com.magedmilad.chatone.R;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.io.InputStream;
 
 public class Utils {
     private static FirebaseDatabase mDatabase;
@@ -42,11 +46,11 @@ public class Utils {
     }
 
     public static boolean isFriend(User user , String email){
-        if(email.equals("chat-one@firebase.con"))
+        if(email.equals("chat-one@firebase.com"))
             return true;
         email = encriptEmail(email);
         for(String s : user.getFriends()){
-            if(s.equals(email)){
+            if(s!=null && s.equals(email)){
                 return true;
             }
         }
@@ -129,6 +133,24 @@ public class Utils {
     }
 
 
-
-
+    private static Bitmap reduceSize(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
+    public static Bitmap getResizedBitmap(InputStream input) throws IOException {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 8;
+        Bitmap ret = reduceSize(BitmapFactory.decodeStream(input, null, options), 500);
+        input.close();
+        return ret;
+    }
 }

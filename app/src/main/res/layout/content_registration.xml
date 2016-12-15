@@ -71,7 +71,7 @@
         android:inputType="textPassword" />
 
     <Button
-        android:id="@+id/regsiter_button"
+        android:id="@+id/register_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
