@@ -2,45 +2,116 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ecf0f1"
     android:orientation="vertical"
     tools:context="com.magedmilad.chatone.DetailsFragment">
 
     <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/avatar"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_gravity="center"
-        android:layout_marginTop="10sp"
-        android:src="@drawable/chat_company_icon"
-        android:id="@+id/avatar"/>
+        android:layout_margin="20sp"
+        android:src="@drawable/chat_company_icon" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10sp"
-        android:text="hello"
-        android:textSize="40sp"
-        android:id="@+id/user_name"/>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10sp"
-        android:text="hellohello"
-        android:textSize="40sp"
-        android:id="@+id/email"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:layout_margin="20sp"
+                android:src="@drawable/user" />
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+
+                android:text="hello"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@android:color/darker_gray"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10sp"
-        android:text="status"
-        android:textSize="40sp"
-        android:id="@+id/status"/>
+        android:layout_height="1dp"
+        />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|left"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:layout_margin="20sp"
+                android:src="@drawable/mail" />
+
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+
+                android:text="hellohello"
+               />
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|left"
+            android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            android:layout_margin="20sp"
+            android:src="@drawable/bubble" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:text="status"
+            />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
 
 </LinearLayout>

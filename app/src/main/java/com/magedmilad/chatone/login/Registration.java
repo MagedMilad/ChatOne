@@ -14,8 +14,12 @@ import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -91,8 +95,11 @@ public class Registration extends AppCompatActivity {
         mUserEmail = mUserEmailEditText.getText().toString();
         mPassword = mPasswordEditText.getText().toString();
 
-        if (!isUserNameValid(mUserName) || !isEmailValid(mUserEmail))
+        if (!isUserNameValid(mUserName) || !isEmailValid(mUserEmail) || !isPasswordValid(mPassword))
             return;
+
+        //to avoid crashing due to conflict of auth and database
+        mUserEmail = mUserEmail.toLowerCase();
 
         mProgressDialog.show();
 
@@ -113,7 +120,12 @@ public class Registration extends AppCompatActivity {
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(Exception e) {
-                                        Utils.showErrorToast(Registration.this, e.getCause().toString());
+                                        if(e instanceof FirebaseNetworkException){
+                                            Utils.showErrorToast(Registration.this, "network error can't connect to server");
+                                        }
+                                        else{
+                                            Utils.showErrorToast(Registration.this, "cant login, try again later");
+                                        }
                                         mProgressDialog.dismiss();
                                     }
                                 });
@@ -122,37 +134,73 @@ public class Registration extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(Exception e) {
+                        if(e instanceof FirebaseAuthWeakPasswordException){
+                            mPasswordEditText.requestFocus();
+                            mPasswordEditText.setError("week password, password should be at least 6 characters");
+
+                        }
+                        else if(e instanceof FirebaseAuthUserCollisionException){
+                            mUserEmailEditText.requestFocus();
+                            mUserEmailEditText.setError("this email is already registered");
+
+                        }
+                        else if(e instanceof FirebaseAuthInvalidCredentialsException){
+                            mUserEmailEditText.requestFocus();
+                            mUserEmailEditText.setError("this email is invalid");
+
+                        }
+                        else if(e instanceof FirebaseNetworkException){
+                            Utils.showErrorToast(Registration.this, "network error can't connect to server");
+                        }
+                        else{
+                            Utils.showErrorToast(Registration.this, "cant register, try again later");
+                        }
                         mProgressDialog.dismiss();
                     }
                 });
     }
 
     private boolean isEmailValid(String email) {
-        //TODO : check email a@a.a error
-        boolean isGoodEmail =
-                (email != null && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches());
-        if (!isGoodEmail) {
-
-            mUserEmailEditText.setFocusable(true);
-            mUserEmailEditText.setError("This Email isn't Valid");
+        if(email == null){
+            //error can't happen
             return false;
         }
-        return isGoodEmail;
+
+        if(email.isEmpty()){
+            mUserEmailEditText.requestFocus();
+            mUserEmailEditText.setError("user email can't be empty");
+            return false;
+        }
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            mUserEmailEditText.requestFocus();
+            mUserEmailEditText.setError("this email is invalid");
+            return false;
+        }
+        return true;
     }
 
     private boolean isUserNameValid(String userName) {
-        if (userName.equals("")) {
-            mUserNameEditText.setFocusable(true);
-            mUserNameEditText.setError("User Name Can't be Empty");
+        if (userName.isEmpty()) {
+            mUserNameEditText.requestFocus();
+            mUserNameEditText.setError("user name can't be empty");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isPasswordValid(String password) {
+        if (password.isEmpty()) {
+            mPasswordEditText.requestFocus();
+            mPasswordEditText.setError("password can't be Empty");
             return false;
         }
         return true;
     }
 
 
+
+
     private void addGlobalFriend() {
-//        final DatabaseReference users = Utils.getDatabase().getReference().child("users");
-//        final String newEmail = Utils.encriptEmail(Constants.GLOBAL_EMAIL);
         final DatabaseReference user =  Utils.getUser(Constants.GLOBAL_EMAIL);
         user.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -168,6 +216,7 @@ public class Registration extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError firebaseError) {
+                Utils.showErrorToast(Registration.this, firebaseError.getMessage());
             }
         });
     }

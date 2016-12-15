@@ -1,8 +1,11 @@
 package com.magedmilad.chatone;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -17,14 +20,22 @@ import android.widget.Toast;
 import com.github.clans.fab.FloatingActionButton;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.magedmilad.chatone.Model.ChatMessage;
 import com.magedmilad.chatone.Model.User;
+import com.magedmilad.chatone.Utils.Constants;
 import com.magedmilad.chatone.Utils.Utils;
 import com.magedmilad.chatone.Utils.ViewPagerAdapter;
 import com.magedmilad.chatone.login.LoginActivity;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -48,13 +59,19 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(getBaseContext(), LoginActivity.class);
             startActivity(intent);
             finish();
-        }
-        else{
+        } else {
             mCurrentUserEmail = authData.getCurrentUser().getEmail();
             Utils.getUser(mCurrentUserEmail).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     currentUser = snapshot.getValue(User.class);
+                    if(!isMyServiceRunning(NotificationService.class)){
+                        Intent intent = new Intent(getBaseContext(), NotificationService.class);
+                        intent.putExtra(Constants.INTENT_EXTRA_CURRENT_USER, currentUser);
+                        intent.putExtra(Constants.INTENT_EXTRA_CURRENT_USER_EMAIL, mCurrentUserEmail);
+
+                        startService(intent);
+                    }
 
                 }
 
@@ -71,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(0).setIcon(R.mipmap.ic_launcher);
-        tabLayout.getTabAt(1).setIcon(R.mipmap.ic_launcher);
+        tabLayout.getTabAt(0).setIcon(R.drawable.all_friends);
+        tabLayout.getTabAt(1).setIcon(R.drawable.list);
 
         FloatingActionButton addFriendButton = (FloatingActionButton) findViewById(R.id.add_friend_button);
         addFriendButton.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                         MainActivity.this);
                 LayoutInflater inflater = MainActivity.this.getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.add_friend_dialog, null);
-                ((EditText)dialogView.findViewById(R.id.add_friend_edit_text)).setHint("status");
+                ((EditText) dialogView.findViewById(R.id.add_friend_edit_text)).setHint("status");
                 builder.setView(dialogView);
                 builder.setTitle("Enter new status message");
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -137,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
         logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                stopService(new Intent(getBaseContext(), NotificationService.class));
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(MainActivity.this.getBaseContext(), LoginActivity.class);
                 startActivity(intent);
@@ -184,5 +202,65 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+//    private void notification() {
+//        for (int i = 1; i < currentUser.getChatRoomId().size(); i++) {
+//            DatabaseReference mFirebaseRef = Utils.getChat(currentUser.getChatRoomId().get(i));
+//            mFirebaseRef.keepSynced(true);
+//            final int finalI = i;
+//            mFirebaseRef.addChildEventListener(new ChildEventListener() {
+//                @Override
+//                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                    //TODO :notification
+//                    ChatMessage newMessage = dataSnapshot.getValue(ChatMessage.class);
+//                    if (!newMessage.isNotified() && !mCurrentUserEmail.equals(newMessage.getSenderEmail())) {
+//                        Utils.showNotification(MainActivity.this, createNewMessageIntent(), "New Messeage From " + newMessage.getName(), newMessage.getMessage(), currentUser.getChatRoomId().get(finalI).hashCode());
+//                        Map<String, Object> notifiedMessage = new HashMap<>();
+//                        notifiedMessage.put("notified", true);
+//                        dataSnapshot.getRef().updateChildren(notifiedMessage);
+//                    }
+//                }
+//
+//                @Override
+//                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//                }
+//
+//                @Override
+//                public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//                }
+//
+//                @Override
+//                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError firebaseError) {
+//
+//                }
+//
+//                private Intent createNewMessageIntent() {
+//                    Intent intent = new Intent(MainActivity.this, ChatRoom.class);
+//                    intent.putExtra(Constants.INTENT_EXTRA_FRIEND_EMAIL, currentUser.getFriends().get(finalI));
+//                    intent.putExtra(Constants.INTENT_EXTRA_CURRENT_USER, currentUser);
+//                    intent.putExtra(Constants.INTENT_EXTRA_CURRENT_USER_EMAIL, mCurrentUserEmail);
+//                    return intent;
+//                }
+//            });
+//
+//        }
+//    }
 
 }

@@ -10,14 +10,18 @@ import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.magedmilad.chatone.MainActivity;
 import com.magedmilad.chatone.R;
+import com.magedmilad.chatone.Utils.Utils;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText mUserEmailEditText , mPasswordEditText;
+    private EditText mUserEmailEditText, mPasswordEditText;
     private String mUserEmail, mPassword;
     private ProgressDialog mProgressDialog;
 
@@ -49,6 +53,18 @@ public class LoginActivity extends AppCompatActivity {
         mUserEmail = mUserEmailEditText.getText().toString();
         mPassword = mPasswordEditText.getText().toString();
 
+        if (mUserEmail.isEmpty()) {
+            mUserEmailEditText.setError("enter your email");
+            return;
+        }
+        if (mPassword.isEmpty()) {
+            mPasswordEditText.setError("enter your password");
+            return;
+        }
+
+        //to avoid crashing due to conflict of auth and database
+        mUserEmail = mUserEmail.toLowerCase();
+
         mProgressDialog.show();
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -62,27 +78,22 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
-                      @Override
-                      public void onFailure(Exception e) {
-                          //TODO : complete error checking
-                          mProgressDialog.dismiss();
-//                          switch (e.getMessage().getCode()) {
-//                              case DatabaseError.INVALID_EMAIL:
-//                              case FirebaseError.USER_DOES_NOT_EXIST:
-//                                  mUserEmailEditText.setError("There was an error with your email");
-//                                  break;
-//                              case FirebaseError.INVALID_PASSWORD:
-//                                  mPasswordEditText.setError(error.getMessage());
-//                                  break;
-//                              case FirebaseError.NETWORK_ERROR:
-//                                  Utils.showErrorToast(LoginActivity.this, "Failed to Sign in Not Network");
-//                                  break;
-//                              default:
-//                                  Utils.showErrorToast(LoginActivity.this, error.toString());
-//                          }
-                      }
-                  }
+                                          @Override
+                                          public void onFailure(Exception e) {
+                                              mProgressDialog.dismiss();
+                                              if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                                                  Utils.showErrorToast(LoginActivity.this, "entered email/password is invalid");
+                                              } else if (e instanceof FirebaseAuthInvalidUserException) {
+                                                  mUserEmailEditText.setError("no user found with this email");
+                                                  mUserEmailEditText.requestFocus();
+                                              } else if (e instanceof FirebaseNetworkException) {
+                                                  Utils.showErrorToast(LoginActivity.this, "network error can't connect to server");
+                                              } else {
+                                                  Utils.showErrorToast(LoginActivity.this, e.getMessage());
+                                              }
+                                          }
+                                      }
 
                 );
     }
-    }
+}
