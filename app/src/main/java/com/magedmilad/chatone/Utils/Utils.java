@@ -111,7 +111,7 @@ public class Utils {
         });
     }
 
-    private static DatabaseReference getDatabase() {
+    public static DatabaseReference getDatabase() {
         if (mDatabase == null) {
             mDatabase = FirebaseDatabase.getInstance();
             mDatabase.setPersistenceEnabled(true);

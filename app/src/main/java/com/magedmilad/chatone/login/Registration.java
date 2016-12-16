@@ -114,7 +114,7 @@ public class Registration extends AppCompatActivity {
                                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                     @Override
                                     public void onSuccess(AuthResult authResult) {
-                                        new SaveUserTask(mUserEmail, mUserName, Registration.this, mProgressDialog).execute(mAvatarUri);
+                                        new SaveUserTask(mUserEmail, mUserName, Registration.this, mProgressDialog,SaveUserTask.FILE_URL).execute(mAvatarUri);
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
