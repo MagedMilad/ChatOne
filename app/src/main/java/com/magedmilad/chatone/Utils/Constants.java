@@ -20,6 +20,7 @@ public class Constants {
     public static final String INTENT_EXTRA_CURRENT_USER = "current_user";
     public static final String INTENT_EXTRA_FRIEND_EMAIL = "friend_email";
     public static final String INTENT_EXTRA_CURRENT_USER_EMAIL = "current_user_email";
+    public static final String INTENT_EXTRA_GROUP_CHAT_ROOM_ID = "group_chat_room_id";
 
 
 

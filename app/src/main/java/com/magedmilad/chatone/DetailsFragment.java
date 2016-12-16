@@ -1,7 +1,7 @@
 package com.magedmilad.chatone;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +18,7 @@ import com.magedmilad.chatone.Utils.Utils;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
-public class DetailsFragment extends Fragment {
+public class DetailsFragment extends DialogFragment {
 
     private String email;
     private User currentUser;

@@ -101,7 +101,7 @@ public class SaveUserTask extends AsyncTask<Uri, Void, Void> {
         ArrayList<String> chatRoomId = new ArrayList<>();
         chatRoomId.add("0");
         friends.add(Constants.GLOBAL_EMAIL);
-        User currentUser = new User(mUserName, friends, chatRoomId, link);
+        User currentUser = new User(mUserName, friends, chatRoomId,new ArrayList<String>(), link);
         Utils.getUser(mUserEmail).setValue(currentUser);
     }
 

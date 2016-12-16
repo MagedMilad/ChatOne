@@ -10,6 +10,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,6 +24,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.magedmilad.chatone.DetailsFragment;
+import com.magedmilad.chatone.Model.GroupChat;
 import com.magedmilad.chatone.Model.User;
 import com.magedmilad.chatone.R;
 import com.squareup.picasso.Picasso;
@@ -94,15 +99,62 @@ public class Utils {
             public void onCancelled(DatabaseError firebaseError) {
             }
         });
-
     }
 
-    public static void setUserImageView(final Activity context, final String email, final ImageView view){
+    public static void setGroupChatView(final FragmentActivity context, final GroupChat chat, final View view){
+
+        ((TextView) view.findViewById(R.id.friend_name_text_view)).setText(chat.getName());
+        String names = "";
+        for(int i=0;i<chat.getEmails().size();i++){
+            names+=chat.getEmails().get(i);
+            if(i != chat.getEmails().size()-1){
+                names+=", ";
+            }
+        }
+        if(names.length() > 15){
+            names = names.substring(0, 15)+"...";
+        }
+        ((TextView) view.findViewById(R.id.status_text_view)).setText(names);
+        ImageView iv = (ImageView) view.findViewById(R.id.friend_circular_image_view);
+        setUserImageView(context, chat.getEmails().get(0), iv);
+    }
+
+    private static void setUserImageView(final FragmentActivity context, final String email, final ImageView view){
         getUser(email).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 Picasso.with(context).load(decriptEmail(user.getAvatarUri())).into(view);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DetailsFragment modal = DetailsFragment.newInstance(email);
+                        modal.setStyle(DialogFragment.STYLE_NORMAL, 0);
+                        modal.show(context.getSupportFragmentManager(), "");
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+            }
+        });
+    }
+
+    public static void setUserImageView(final AppCompatActivity context, final String email, final ImageView view){
+        getUser(email).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                Picasso.with(context).load(decriptEmail(user.getAvatarUri())).into(view);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DetailsFragment modal = DetailsFragment.newInstance(email);
+                        modal.setStyle(DialogFragment.STYLE_NORMAL, 0);
+                        modal.show(context.getSupportFragmentManager(), "");
+                    }
+                });
             }
 
             @Override
@@ -128,8 +180,16 @@ public class Utils {
         return getDatabase().child("chat").child(chatRoomId);
     }
 
+    public static DatabaseReference getGroupChat(String chatRoomId){
+        return getDatabase().child("groupChat").child(chatRoomId);
+    }
+
     public static DatabaseReference getChats(){
         return getDatabase().child("chat");
+    }
+
+    public static DatabaseReference getGroupChats(){
+        return getDatabase().child("groupChat");
     }
 
 

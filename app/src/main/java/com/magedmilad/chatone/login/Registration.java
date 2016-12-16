@@ -136,7 +136,7 @@ public class Registration extends AppCompatActivity {
                     public void onFailure(Exception e) {
                         if(e instanceof FirebaseAuthWeakPasswordException){
                             mPasswordEditText.requestFocus();
-                            mPasswordEditText.setError("week password, password should be at least 6 characters");
+                            mPasswordEditText.setError("weak password, password should be at least 6 characters");
 
                         }
                         else if(e instanceof FirebaseAuthUserCollisionException){
@@ -210,7 +210,7 @@ public class Registration extends AppCompatActivity {
                     String link = "https://firebasestorage.googleapis.com/v0/b/firebase-chat-one.appspot.com/o/network-icon-1910.png?alt=media&token=fbcf3113-fda9-4c43-b70a-9054350c4b31";
                     ArrayList<String> chatRoomId = new ArrayList<>();
                     chatRoomId.add("0");
-                    user.setValue(new User("Global", new ArrayList<String>(), chatRoomId, link, "Meet new Friends here"));
+                    user.setValue(new User("Global", new ArrayList<String>(), chatRoomId, new ArrayList<String>(), link, "Meet new Friends here"));
                 }
             }
 
