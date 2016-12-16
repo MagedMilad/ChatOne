@@ -8,13 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.magedmilad.chatone.Model.ChatMessage;
 import com.magedmilad.chatone.Model.User;
 import com.magedmilad.chatone.Utils.Constants;
@@ -59,6 +59,18 @@ public class ChatRoom extends AppCompatActivity {
                 idx++;
             }
         }
+
+        Utils.getUser(friendEmail).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User friend = dataSnapshot.getValue(User.class);
+                ChatRoom.this.setTitle(friend.getUserName());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
 
         mFirebaseRef = Utils.getChat(mChatRoomId);
         mMessageEdit = (EditText) findViewById(R.id.message_text);

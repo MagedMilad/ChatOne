@@ -40,6 +40,10 @@
             android:label="@string/title_activity_chat_room"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".GroupChatRoom"
+            android:label="@string/title_activity_chat_room"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".login.Registration"
             android:excludeFromRecents="true"
             android:label="@string/title_activity_registration"

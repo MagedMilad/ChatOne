@@ -27,9 +27,6 @@ android {
 }
 
 dependencies {
-
-    androidTestCompile (name:'cloudtestingscreenshotter_lib', ext:'aar')
-
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
 
@@ -60,7 +57,3 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
-
-
-
-

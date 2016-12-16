@@ -12,22 +12,24 @@ public class User implements Serializable {
     private String userName;
     private ArrayList<String> friends = new ArrayList<>();
     private ArrayList<String> chatRoomId = new ArrayList<>();
+    private ArrayList<String> groupChatRoomId = new ArrayList<>();
     private String status;
     private String avatarUri;
 
     public User() {
     }
 
-    public User(String userName, ArrayList<String> friends, ArrayList<String> chatRoomId, String avatarUri) {
+    public User(String userName, ArrayList<String> friends, ArrayList<String> chatRoomId, ArrayList<String> groupChatRoomId, String avatarUri) {
         this.userName = userName;
         this.friends = friends;
         this.chatRoomId = chatRoomId;
         this.status = "hey there, i'm using OneChat!";
         this.avatarUri = avatarUri;
+        this.groupChatRoomId = groupChatRoomId;
     }
 
-    public User(String userName, ArrayList<String> friends, ArrayList<String> chatRoomId, String avatarUri, String status) {
-        this(userName, friends, chatRoomId, avatarUri);
+    public User(String userName, ArrayList<String> friends, ArrayList<String> chatRoomId, ArrayList<String> groupChatRoomId, String avatarUri, String status) {
+        this(userName, friends, chatRoomId, groupChatRoomId, avatarUri);
         this.status = status;
     }
 
@@ -49,5 +51,9 @@ public class User implements Serializable {
 
     public String getAvatarUri() {
         return avatarUri;
+    }
+
+    public ArrayList<String> getGroupChatRoomId() {
+        return groupChatRoomId;
     }
 }
