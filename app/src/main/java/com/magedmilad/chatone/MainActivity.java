@@ -42,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
 
     User currentUser;
     String mCurrentUserEmail;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +79,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
         setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(0).setIcon(R.drawable.all_friends);
         //TODO: change to actual icon
@@ -113,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
                         addFriendAction(email);
                     }
                 }).setNegativeButton("Cancel", null);
-
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
@@ -142,9 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 ArrayAdapter lAdapter = new ArrayAdapter<String>(MainActivity.this, R.layout.group_chat_friend_layout, list){
                     @Override
                     public View getView(int position, View convertView, ViewGroup parent) {
-
                         View v = convertView;
-
                         if (v == null) {
                             LayoutInflater vi;
                             vi = LayoutInflater.from(getContext());
@@ -175,18 +170,16 @@ public class MainActivity extends AppCompatActivity {
                         EditText chatNameEditText = (EditText) dlg.findViewById(R.id.chat_name);
                         String chatName = chatNameEditText.getText().toString();
                         if(chatName.isEmpty()){
-                            chatNameEditText.setError("chat name can't be empty");
-                            chatNameEditText.requestFocus();
+                            Utils.showErrorToast(MainActivity.this, "chat name can't be empty");
                             return;
                         }
                         if(selected.size() < 3){
-                            Utils.showErrorToast(MainActivity.this, "select at least 2 friend");
+                            Utils.showErrorToast(MainActivity.this, "select at least 2 friends");
                             return;
                         }
                         startGroupChatAction(chatName, selected);
                     }
                 }).setNegativeButton("Cancel", null);
-
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
@@ -211,7 +204,6 @@ public class MainActivity extends AppCompatActivity {
                         Utils.getUser(mCurrentUserEmail).child("status").setValue(status);
                     }
                 }).setNegativeButton("Cancel", null);
-
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
@@ -228,9 +220,7 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-
     }
-
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -265,10 +255,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError firebaseError) {
                 Toast.makeText(MainActivity.this, "Error : this Email isn't Registered", Toast.LENGTH_LONG).show();
-
             }
         });
-
     }
 
     private void startGroupChatAction(String chatName, ArrayList<String> emails) {
@@ -276,8 +264,6 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference newChatRoom = groupChat.push();
         newChatRoom.setValue(new GroupChat(chatName, emails));
         final String roomKey = newChatRoom.getKey();
-//        currentUser.getGroupChatRoomId().add(roomKey);
-//        Utils.getUser(mCurrentUserEmail).setValue(currentUser);
         for(int i=0;i<emails.size();i++){
 
             final String friendEmail = emails.get(i);

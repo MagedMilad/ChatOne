@@ -79,7 +79,6 @@ public class Utils {
 
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         mBuilder.setSound(alarmSound);
-
         Notification notification = mBuilder.build();
         NotificationManager notificationManager = (NotificationManager) c.getSystemService(c.NOTIFICATION_SERVICE);
         notificationManager.notify(0, notification);
@@ -111,26 +110,12 @@ public class Utils {
                 names+=", ";
             }
         }
-        if(names.length() > 15){
-            names = names.substring(0, 15)+"...";
+        if(names.length() > 20){
+            names = names.substring(0, 20)+"...";
         }
         ((TextView) view.findViewById(R.id.status_text_view)).setText(names);
         ImageView iv = (ImageView) view.findViewById(R.id.friend_circular_image_view);
-        setUserImageView(context, chat.getEmails().get(0), iv);
-    }
-
-    private static void setUserImageView(final FragmentActivity context, final String email, final ImageView view){
-        getUser(email).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                Picasso.with(context).load(decriptEmail(user.getAvatarUri())).into(view);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError firebaseError) {
-            }
-        });
+        new SetCombinedImageTask(context, iv).execute(chat.getEmails().toArray(new String[chat.getEmails().size()]));
     }
 
     public static void setUserImageView(final AppCompatActivity context, final String email, final ImageView view){
@@ -205,14 +190,4 @@ public class Utils {
         input.close();
         return ret;
     }
-
-//    private Bitmap combine(Bitmap firstImage, Bitmap secondImage, Bitmap thirdImage){
-//        Bitmap result = Bitmap.createBitmap(firstImage.getWidth(), firstImage.getHeight(), firstImage.getConfig());
-//        Canvas canvas = new Canvas(result);
-//        canvas.drawBitmap(firstImage, 0, 0, null);
-//        canvas.drawBitmap(secondImage, firstImage.getWidth()/2, 0, null);
-//        canvas.drawBitmap(thirdImage, firstImage.getWidth()/2, firstImage.getHeight()/2, null);
-//        return result;
-//    }
-
 }
