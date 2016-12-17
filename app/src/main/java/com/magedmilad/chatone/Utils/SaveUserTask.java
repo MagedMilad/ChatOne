@@ -107,6 +107,7 @@ public class SaveUserTask extends AsyncTask<Uri, Void, Void> {
 
     protected void onPostExecute(Void result) {
         mProgressDialog.dismiss();
+
         Intent intent = new Intent(mActivity, MainActivity.class);
         mActivity.startActivity(intent);
         mActivity.finish();
