@@ -38,14 +38,11 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.magedmilad.chatone.MainActivity;
 import com.magedmilad.chatone.R;
-import com.magedmilad.chatone.Utils.Constants;
 import com.magedmilad.chatone.Utils.SaveUserTask;
 import com.magedmilad.chatone.Utils.Utils;
 
@@ -140,6 +137,7 @@ public class LoginActivity extends AppCompatActivity {
                                     mProgressDialog.dismiss();
                                     Intent intent = new Intent(getBaseContext(), MainActivity.class);
                                     startActivity(intent);
+                                    finish();
                                 }
                                 else{
                                     Log.d("auth","doesn't user exists");
@@ -149,10 +147,14 @@ public class LoginActivity extends AppCompatActivity {
 
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
-                                //// TODO: 12/16/16  show error msh 3arf eh el saraha 
+                                //// TODO: 12/16/16  show error msh 3arf eh el saraha
+                                mProgressDialog.dismiss();
+
                             }
                         });
 
+                    }else{
+                        mProgressDialog.dismiss();
                     }
 
                 }
@@ -269,6 +271,7 @@ public class LoginActivity extends AppCompatActivity {
                         mProgressDialog.dismiss();
                         Intent intent = new Intent(getBaseContext(), MainActivity.class);
                         startActivity(intent);
+                        finish();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

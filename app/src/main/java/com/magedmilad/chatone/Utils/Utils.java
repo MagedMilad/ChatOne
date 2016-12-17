@@ -125,14 +125,6 @@ public class Utils {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 Picasso.with(context).load(decriptEmail(user.getAvatarUri())).into(view);
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        DetailsFragment modal = DetailsFragment.newInstance(email);
-                        modal.setStyle(DialogFragment.STYLE_NORMAL, 0);
-                        modal.show(context.getSupportFragmentManager(), "");
-                    }
-                });
             }
 
             @Override
@@ -213,4 +205,14 @@ public class Utils {
         input.close();
         return ret;
     }
+
+//    private Bitmap combine(Bitmap firstImage, Bitmap secondImage, Bitmap thirdImage){
+//        Bitmap result = Bitmap.createBitmap(firstImage.getWidth(), firstImage.getHeight(), firstImage.getConfig());
+//        Canvas canvas = new Canvas(result);
+//        canvas.drawBitmap(firstImage, 0, 0, null);
+//        canvas.drawBitmap(secondImage, firstImage.getWidth()/2, 0, null);
+//        canvas.drawBitmap(thirdImage, firstImage.getWidth()/2, firstImage.getHeight()/2, null);
+//        return result;
+//    }
+
 }
