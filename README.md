@@ -1,0 +1,2 @@
+# ChatOne
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/23819ed91a8a4983912a0dbd19835129)](https://www.codacy.com/app/magedmilad08/ChatOne?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=MagedMilad/ChatOne&amp;utm_campaign=badger)
