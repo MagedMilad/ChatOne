@@ -110,24 +110,6 @@ public class LoginActivity extends AppCompatActivity {
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     mProgressDialog.show();
-                    // User is signed in
-                    Log.d("auth====>", user.getDisplayName() + " " + user.getEmail() + " " + user.getPhotoUrl());
-                    Utils.showErrorToast(LoginActivity.this, user.getDisplayName() + " " + user.getEmail() + " " + user.getPhotoUrl());
-
-//                    String email = user.getEmail();
-//                    for (UserInfo userInfo : user.getProviderData()) {
-//                        if (email == null && userInfo.getEmail() != null) {
-//                            email = userInfo.getEmail();
-//
-//                            break;
-//                        }
-//                    }
-
-//                    Log.d("auth", "email is : " + email);
-//                    Utils.showErrorToast(LoginActivity.this, email);
-
-
-
                     if (user.getEmail() != null) {
                         Utils.getDatabase().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -149,14 +131,11 @@ public class LoginActivity extends AppCompatActivity {
                             public void onCancelled(DatabaseError databaseError) {
                                 //// TODO: 12/16/16  show error msh 3arf eh el saraha
                                 mProgressDialog.dismiss();
-
                             }
                         });
-
                     }else{
                         mProgressDialog.dismiss();
                     }
-
                 }
             }
         };
