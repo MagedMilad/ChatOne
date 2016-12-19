@@ -37,7 +37,7 @@ public class ScenariosTest {
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void Scenario1() {
+    public void scenario1() {
         //user mina register
         logOutIfLoggedIn();
 
@@ -122,7 +122,7 @@ public class ScenariosTest {
 
 
     @Test
-    public void Scenario2() {
+    public void scenario2() {
         String[] usersEmails = new String[]{"mina@onechat.com", "maged@onechat.com", "omar@onechat.com", "nourane@onechat.com"};
         //users registration
         for (int i = 0; i < 4; i++) {
@@ -172,7 +172,7 @@ public class ScenariosTest {
     }
 
     @Test
-    public void Scenario3(){
+    public void scenario3(){
         String[] usersEmails = new String[]{"mina@onechat.com", "maged@onechat.com", "omar@onechat.com", "nourane@onechat.com"};
 
         logOutIfLoggedIn();

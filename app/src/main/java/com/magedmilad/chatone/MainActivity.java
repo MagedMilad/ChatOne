@@ -28,11 +28,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.magedmilad.chatone.Model.GroupChat;
-import com.magedmilad.chatone.Model.User;
-import com.magedmilad.chatone.Utils.Constants;
-import com.magedmilad.chatone.Utils.Utils;
-import com.magedmilad.chatone.Utils.ViewPagerAdapter;
+import com.magedmilad.chatone.model.GroupChat;
+import com.magedmilad.chatone.model.User;
+import com.magedmilad.chatone.utils.Constants;
+import com.magedmilad.chatone.utils.Utils;
+import com.magedmilad.chatone.utils.ViewPagerAdapter;
 import com.magedmilad.chatone.login.LoginActivity;
 
 import java.util.ArrayList;
@@ -40,8 +40,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    User currentUser;
-    String mCurrentUserEmail;
+    private   User currentUser;
+    private  String mCurrentUserEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

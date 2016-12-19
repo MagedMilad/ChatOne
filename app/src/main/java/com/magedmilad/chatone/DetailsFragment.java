@@ -13,9 +13,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.magedmilad.chatone.Model.User;
-import com.magedmilad.chatone.Utils.Constants;
-import com.magedmilad.chatone.Utils.Utils;
+import com.magedmilad.chatone.model.User;
+import com.magedmilad.chatone.utils.Constants;
+import com.magedmilad.chatone.utils.Utils;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -37,8 +37,7 @@ public class DetailsFragment extends DialogFragment {
         return fragment;
     }
 
-    public DetailsFragment() {
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

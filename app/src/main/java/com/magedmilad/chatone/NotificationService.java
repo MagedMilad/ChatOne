@@ -9,19 +9,17 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.magedmilad.chatone.Model.ChatMessage;
-import com.magedmilad.chatone.Model.User;
-import com.magedmilad.chatone.Utils.Constants;
-import com.magedmilad.chatone.Utils.Utils;
-import com.magedmilad.chatone.login.LoginActivity;
+import com.magedmilad.chatone.model.ChatMessage;
+import com.magedmilad.chatone.model.User;
+import com.magedmilad.chatone.utils.Constants;
+import com.magedmilad.chatone.utils.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class NotificationService extends Service {
 
-    public NotificationService() {
-    }
+
 
     @Override
     public IBinder onBind(Intent intent) {

@@ -14,21 +14,20 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.magedmilad.chatone.Model.ChatMessage;
-import com.magedmilad.chatone.Model.GroupChat;
-import com.magedmilad.chatone.Model.User;
-import com.magedmilad.chatone.Utils.Constants;
-import com.magedmilad.chatone.Utils.Utils;
+import com.magedmilad.chatone.model.ChatMessage;
+import com.magedmilad.chatone.model.GroupChat;
+import com.magedmilad.chatone.model.User;
+import com.magedmilad.chatone.utils.Constants;
+import com.magedmilad.chatone.utils.Utils;
 
 public class GroupChatRoom extends AppCompatActivity {
 
     private User currentUser;
     private DatabaseReference mMesssagesRef;
-    private DatabaseReference mDetailsRef;
     private EditText mMessageEdit;
     private FirebaseMessageRecyclerAdapter mAdapter;
     private String mCurrentUserEmail;
-    private String mChatRoomId = "0";
+    private RecyclerView mListView;
 
     @Override
     protected void onDestroy() {
@@ -36,7 +35,7 @@ public class GroupChatRoom extends AppCompatActivity {
         mAdapter.cleanup();
     }
 
-    private RecyclerView mListView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +47,9 @@ public class GroupChatRoom extends AppCompatActivity {
 
         mCurrentUserEmail = getIntent().getStringExtra(Constants.INTENT_EXTRA_CURRENT_USER_EMAIL);
         currentUser = (User) getIntent().getSerializableExtra(Constants.INTENT_EXTRA_CURRENT_USER);
-        mChatRoomId = getIntent().getStringExtra(Constants.INTENT_EXTRA_GROUP_CHAT_ROOM_ID);
+        String mChatRoomId = getIntent().getStringExtra(Constants.INTENT_EXTRA_GROUP_CHAT_ROOM_ID);
 
-        mDetailsRef = Utils.getGroupChat(mChatRoomId);
+        DatabaseReference mDetailsRef = Utils.getGroupChat(mChatRoomId);
         mMesssagesRef = Utils.getChat(mChatRoomId);
         mMessageEdit = (EditText) findViewById(R.id.message_text);
         mListView = (RecyclerView) findViewById(R.id.chat_listview);
@@ -118,7 +117,7 @@ public class GroupChatRoom extends AppCompatActivity {
 
     public void onSendButtonClick(View v) {
         String message = mMessageEdit.getText().toString();
-        if (message.equals(""))
+        if ("".equals(message))
             return;
         mMesssagesRef.push().setValue(new ChatMessage(currentUser.getUserName(), message , mCurrentUserEmail , false));
         mMessageEdit.setText("");

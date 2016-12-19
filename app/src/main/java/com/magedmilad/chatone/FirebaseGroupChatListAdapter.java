@@ -16,13 +16,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.magedmilad.chatone.FirebaseArray.OnChangedListener;
-import com.magedmilad.chatone.Model.GroupChat;
-import com.magedmilad.chatone.Utils.Utils;
+import com.magedmilad.chatone.model.GroupChat;
+import com.magedmilad.chatone.utils.Utils;
 
 public class FirebaseGroupChatListAdapter extends BaseAdapter {
     protected int mLayout;
     protected FragmentActivity mActivity;
-    FirebaseArray mSnapshots;
+    private FirebaseArray mSnapshots;
 
     public FirebaseGroupChatListAdapter(FragmentActivity activity, int modelLayout, Query ref) {
         this.mLayout = modelLayout;
@@ -67,7 +67,6 @@ public class FirebaseGroupChatListAdapter extends BaseAdapter {
         }
 
         final View v = view;
-        final int pos = position;
         String chatRoomID = mSnapshots.getItem(position).getValue(String.class);
         Utils.getGroupChat(chatRoomID).addValueEventListener(new ValueEventListener() {
             @Override

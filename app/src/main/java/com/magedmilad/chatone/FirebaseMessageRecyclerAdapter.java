@@ -23,8 +23,8 @@ import android.view.ViewGroup;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
-import com.magedmilad.chatone.Model.ChatMessage;
-import com.magedmilad.chatone.Utils.Constants;
+import com.magedmilad.chatone.model.ChatMessage;
+import com.magedmilad.chatone.utils.Constants;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -74,9 +74,9 @@ import java.lang.reflect.InvocationTargetException;
  */
 public abstract class FirebaseMessageRecyclerAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
-    Class<T> mModelClass;
-    Class<VH> mViewHolderClass;
-    FirebaseArray mSnapshots;
+    private  Class<T> mModelClass;
+    private Class<VH> mViewHolderClass;
+    private FirebaseArray mSnapshots;
     private String mCurrentUserEmail;
 
 

@@ -15,18 +15,17 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.magedmilad.chatone.Model.User;
-import com.magedmilad.chatone.Utils.Constants;
-import com.magedmilad.chatone.Utils.Utils;
+import com.magedmilad.chatone.model.User;
+import com.magedmilad.chatone.utils.Constants;
+import com.magedmilad.chatone.utils.Utils;
 
 public class GroupChatListFragment extends Fragment {
-    User currentUser;
-    String mCurrentUserEmail;
-    ListView mGroupChatRooms;
-    FirebaseGroupChatListAdapter chatRoomAdapter;
+    private User currentUser;
+    private  String mCurrentUserEmail;
+    private ListView mGroupChatRooms;
+    private FirebaseGroupChatListAdapter chatRoomAdapter;
 
-    public GroupChatListFragment() {
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

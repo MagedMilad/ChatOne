@@ -20,14 +20,17 @@ import java.util.ArrayList;
  * This class implements an array-like collection on top of a Firebase location.
  */
 class FirebaseArray implements ChildEventListener {
+
+    private Query mQuery;
+    private OnChangedListener mListener;
+    private ArrayList<DataSnapshot> mSnapshots;
+
     public interface OnChangedListener {
         enum EventType { Added, Changed, Removed, Moved }
         void onChanged(EventType type, int index, int oldIndex);
     }
 
-    private Query mQuery;
-    private OnChangedListener mListener;
-    private ArrayList<DataSnapshot> mSnapshots;
+
 
     public FirebaseArray(Query ref) {
         mQuery = ref;

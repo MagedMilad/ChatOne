@@ -43,17 +43,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.magedmilad.chatone.MainActivity;
 import com.magedmilad.chatone.R;
-import com.magedmilad.chatone.Utils.SaveUserTask;
-import com.magedmilad.chatone.Utils.Utils;
+import com.magedmilad.chatone.utils.SaveUserTask;
+import com.magedmilad.chatone.utils.Utils;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText mUserEmailEditText, mPasswordEditText;
-    private String mUserEmail, mPassword;
     private ProgressDialog mProgressDialog;
     private CallbackManager mCallbackManager;
-    private LoginButton mLoginButtonFacebook;
-    private SignInButton mLoginButtonGoogle;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private GoogleApiClient mGoogleApiClient;
@@ -76,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
         mProgressDialog.setCancelable(false);
         /////////////////////////////////
         mCallbackManager = CallbackManager.Factory.create();
-        mLoginButtonFacebook = (LoginButton) findViewById(R.id.login_button_facebook);
+        LoginButton mLoginButtonFacebook = (LoginButton) findViewById(R.id.login_button_facebook);
         mLoginButtonFacebook.setReadPermissions("email", "public_profile");
         mLoginButtonFacebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -155,7 +152,7 @@ public class LoginActivity extends AppCompatActivity {
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-        mLoginButtonGoogle = (SignInButton) findViewById(R.id.login_button_google);
+        SignInButton mLoginButtonGoogle = (SignInButton) findViewById(R.id.login_button_google);
         mLoginButtonGoogle.setSize(SignInButton.SIZE_STANDARD);
         mLoginButtonGoogle.setScopes(gso.getScopeArray());
         mLoginButtonGoogle.setOnClickListener(new View.OnClickListener() {
@@ -225,8 +222,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginButtonClick(View v) {
 
-        mUserEmail = mUserEmailEditText.getText().toString();
-        mPassword = mPasswordEditText.getText().toString();
+        String mUserEmail = mUserEmailEditText.getText().toString();
+        String mPassword = mPasswordEditText.getText().toString();
 
         if (mUserEmail.isEmpty()) {
             mUserEmailEditText.setError("enter your email");

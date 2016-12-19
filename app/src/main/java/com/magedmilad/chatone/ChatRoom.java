@@ -14,10 +14,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.magedmilad.chatone.Model.ChatMessage;
-import com.magedmilad.chatone.Model.User;
-import com.magedmilad.chatone.Utils.Constants;
-import com.magedmilad.chatone.Utils.Utils;
+import com.magedmilad.chatone.model.ChatMessage;
+import com.magedmilad.chatone.model.User;
+import com.magedmilad.chatone.utils.Constants;
+import com.magedmilad.chatone.utils.Utils;
 
 public class ChatRoom extends AppCompatActivity {
 
@@ -123,7 +123,7 @@ public class ChatRoom extends AppCompatActivity {
 
     public void onSendButtonClick(View v) {
         String message = mMessageEdit.getText().toString();
-        if (message.equals(""))
+        if ("".equals(message))
             return;
         mFirebaseRef.push().setValue(new ChatMessage(currentUser.getUserName(), message , mCurrentUserEmail , false));
         mMessageEdit.setText("");
