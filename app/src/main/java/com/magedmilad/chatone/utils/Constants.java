@@ -1,4 +1,4 @@
-package com.magedmilad.chatone.Utils;
+package com.magedmilad.chatone.utils;
 
 /**
  * Created by magedmilad on 6/13/16.

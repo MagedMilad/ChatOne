@@ -1,6 +1,5 @@
 package com.magedmilad.chatone;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,7 +22,6 @@ import com.magedmilad.chatone.Utils.Utils;
 public class ChatRoom extends AppCompatActivity {
 
     private User currentUser;
-    private String friendEmail;
     private DatabaseReference mFirebaseRef;
     private EditText mMessageEdit;
     private FirebaseMessageRecyclerAdapter mAdapter;
@@ -48,7 +46,7 @@ public class ChatRoom extends AppCompatActivity {
 
         mCurrentUserEmail = getIntent().getStringExtra(Constants.INTENT_EXTRA_CURRENT_USER_EMAIL);
         currentUser = (User) getIntent().getSerializableExtra(Constants.INTENT_EXTRA_CURRENT_USER);
-        friendEmail = getIntent().getStringExtra(Constants.INTENT_EXTRA_FRIEND_EMAIL);
+        String friendEmail = getIntent().getStringExtra(Constants.INTENT_EXTRA_FRIEND_EMAIL);
         if (friendEmail != null) {
             int idx = 0;
             for (String email : currentUser.getFriends()) {
@@ -77,24 +75,12 @@ public class ChatRoom extends AppCompatActivity {
         mListView = (RecyclerView) findViewById(R.id.chat_listview);
         mListView.setHasFixedSize(true);
         mListView.setLayoutManager(new LinearLayoutManager(this));
-//        Utils.setUserView(ChatRoom.this, Utils.encriptEmail(mCurrentUserEmail), findViewById(R.id.send_circular_image_view));
-//        Utils.setUserImageView(ChatRoom.this, Utils.encriptEmail(mCurrentUserEmail), (ImageView) findViewById(R.id.send_circular_image_view));
-
         mFirebaseRef.keepSynced(true);
         
 
         mFirebaseRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                //TODO :notification
-//                ChatMessage newMessage = dataSnapshot.getValue(ChatMessage.class);
-//                if (!newMessage.isNotified() && !mCurrentUserEmail.equals(newMessage.getSenderEmail())) {
-//                    Utils.showNotification(ChatRoom.this, createNewMessageIntent(), "New Messeage From " + newMessage.getName(), newMessage.getMessage(), mChatRoomId.hashCode());
-//                    Map<String, Object> notifiedMessage = new HashMap<>();
-//                    notifiedMessage.put("notified", true);
-//                    dataSnapshot.getRef().updateChildren(notifiedMessage);
-//                }
-
                 mListView.smoothScrollToPosition(mAdapter.getItemCount());
             }
 
@@ -117,33 +103,16 @@ public class ChatRoom extends AppCompatActivity {
             public void onCancelled(DatabaseError firebaseError) {
 
             }
-
-            private Intent createNewMessageIntent() {
-                Intent intent = new Intent(ChatRoom.this, ChatRoom.class);
-                intent.putExtra(Constants.INTENT_EXTRA_FRIEND_EMAIL, friendEmail);
-                intent.putExtra(Constants.INTENT_EXTRA_CURRENT_USER, currentUser);
-                intent.putExtra(Constants.INTENT_EXTRA_CURRENT_USER_EMAIL, mCurrentUserEmail);
-                return intent;
-            }
         });
 
 
         mAdapter = new FirebaseMessageRecyclerAdapter<ChatMessage, ChatHolder>(ChatMessage.class,  ChatHolder.class, mFirebaseRef,mCurrentUserEmail) {
-            int prev = 0;
             @Override
             protected void populateViewHolder(ChatHolder chatHolder, ChatMessage chatMessage, int i) {
-                if(i == Constants.SENDER_LAYOUT_TYPE);
-//                    Utils.setUserImageView(ChatRoom.this, Utils.encriptEmail(mCurrentUserEmail), chatHolder.getImageView());
-                else
-//                    Utils.setUserImageView(ChatRoom.this, Utils.encriptEmail(friendEmail), chatHolder.getImageView());
+                if(i != Constants.SENDER_LAYOUT_TYPE)
                     Utils.setUserImageView(ChatRoom.this, Utils.encriptEmail(chatMessage.getSenderEmail()), chatHolder.getImageView());
 
                 chatHolder.setMessage(chatMessage.getMessage());
-                //TODO :handle first entry case
-                if(mAdapter != null && prev != mAdapter.getItemCount()) {
-                    prev = mAdapter.getItemCount();
-                    mListView.scrollToPosition(mAdapter.getItemCount());
-                }
             }
 
 

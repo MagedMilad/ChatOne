@@ -38,14 +38,11 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.magedmilad.chatone.MainActivity;
 import com.magedmilad.chatone.R;
-import com.magedmilad.chatone.Utils.Constants;
 import com.magedmilad.chatone.Utils.SaveUserTask;
 import com.magedmilad.chatone.Utils.Utils;
 
@@ -113,24 +110,6 @@ public class LoginActivity extends AppCompatActivity {
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     mProgressDialog.show();
-                    // User is signed in
-                    Log.d("auth====>", user.getDisplayName() + " " + user.getEmail() + " " + user.getPhotoUrl());
-                    Utils.showErrorToast(LoginActivity.this, user.getDisplayName() + " " + user.getEmail() + " " + user.getPhotoUrl());
-
-//                    String email = user.getEmail();
-//                    for (UserInfo userInfo : user.getProviderData()) {
-//                        if (email == null && userInfo.getEmail() != null) {
-//                            email = userInfo.getEmail();
-//
-//                            break;
-//                        }
-//                    }
-
-//                    Log.d("auth", "email is : " + email);
-//                    Utils.showErrorToast(LoginActivity.this, email);
-
-
-
                     if (user.getEmail() != null) {
                         Utils.getDatabase().child("users").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -140,6 +119,7 @@ public class LoginActivity extends AppCompatActivity {
                                     mProgressDialog.dismiss();
                                     Intent intent = new Intent(getBaseContext(), MainActivity.class);
                                     startActivity(intent);
+                                    finish();
                                 }
                                 else{
                                     Log.d("auth","doesn't user exists");
@@ -149,12 +129,13 @@ public class LoginActivity extends AppCompatActivity {
 
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
-                                //// TODO: 12/16/16  show error msh 3arf eh el saraha 
+                                //// TODO: 12/16/16  show error msh 3arf eh el saraha
+                                mProgressDialog.dismiss();
                             }
                         });
-
+                    }else{
+                        mProgressDialog.dismiss();
                     }
-
                 }
             }
         };
@@ -269,6 +250,7 @@ public class LoginActivity extends AppCompatActivity {
                         mProgressDialog.dismiss();
                         Intent intent = new Intent(getBaseContext(), MainActivity.class);
                         startActivity(intent);
+                        finish();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

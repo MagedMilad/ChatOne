@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -40,9 +42,6 @@ public class MainActivity extends AppCompatActivity {
 
     User currentUser;
     String mCurrentUserEmail;
-    //TODO : tabView
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +78,11 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        //TODO: tabView
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
+
+        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
         setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(0).setIcon(R.drawable.all_friends);
         //TODO: change to actual icon
@@ -112,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
                         addFriendAction(email);
                     }
                 }).setNegativeButton("Cancel", null);
-
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
@@ -128,28 +126,41 @@ public class MainActivity extends AppCompatActivity {
                 View dialogView = inflater.inflate(R.layout.group_chat_dialog, null);
                 ListView friendsList = (ListView) dialogView.findViewById(R.id.friends_list_view);
                 DatabaseReference ref = Utils.getUser(mCurrentUserEmail).child("friends");
-                final ArrayList<String> emails = new ArrayList<>();
-                emails.add(mCurrentUserEmail);
+                final ArrayList<String> selected = new ArrayList<>();
+                selected.add(mCurrentUserEmail);
                 ref.keepSynced(true);
-                FirebaseListAdapter<String> friendsAdapter = new FirebaseListAdapter<String>(MainActivity.this, String.class, R.layout.group_chat_friend_layout, ref) {
+                ArrayList<String> list = currentUser.getFriends();
+                if(list.contains(Constants.GLOBAL_EMAIL)){
+                    list.remove(Constants.GLOBAL_EMAIL);
+                }
+                if(list.contains(mCurrentUserEmail)){
+                    list.remove(mCurrentUserEmail);
+                }
+                ArrayAdapter lAdapter = new ArrayAdapter<String>(MainActivity.this, R.layout.group_chat_friend_layout, list){
                     @Override
-                    protected void populateView(View view, String friendEmail, int i) {
-                        //TODO: handle global friend & my email
-                        Utils.setUserView(MainActivity.this, friendEmail, view);
-                        final String mail = friendEmail;
-                        CheckBox chosenFriend = (CheckBox) view.findViewById(R.id.chosen_friend);
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        View v = convertView;
+                        if (v == null) {
+                            LayoutInflater vi;
+                            vi = LayoutInflater.from(getContext());
+                            v = vi.inflate(R.layout.group_chat_friend_layout, null);
+                        }
+                        final int pos = position;
+                        Utils.setUserView(MainActivity.this, getItem(position), v);
+                        CheckBox chosenFriend = (CheckBox) v.findViewById(R.id.chosen_friend);
                         chosenFriend.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             @Override
                             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                 if(isChecked)
-                                    emails.add(mail);
+                                    selected.add(getItem(pos));
                                 else
-                                    emails.remove(mail);
+                                    selected.remove(getItem(pos));
                             }
                         });
+                        return v;
                     }
                 };
-                friendsList.setAdapter(friendsAdapter);
+                friendsList.setAdapter(lAdapter);
                 builder.setView(dialogView);
                 builder.setTitle("Choose friends");
                 builder.setPositiveButton("Create Group chat", new DialogInterface.OnClickListener() {
@@ -157,13 +168,18 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         AlertDialog dlg = (AlertDialog) dialog;
                         EditText chatNameEditText = (EditText) dlg.findViewById(R.id.chat_name);
-                        //TODO: empty chat name
                         String chatName = chatNameEditText.getText().toString();
-                        //TODO: empty friends list
-                        startGroupChatAction(chatName, emails);
+                        if(chatName.isEmpty()){
+                            Utils.showErrorToast(MainActivity.this, "chat name can't be empty");
+                            return;
+                        }
+                        if(selected.size() < 3){
+                            Utils.showErrorToast(MainActivity.this, "select at least 2 friends");
+                            return;
+                        }
+                        startGroupChatAction(chatName, selected);
                     }
                 }).setNegativeButton("Cancel", null);
-
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
@@ -185,14 +201,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         AlertDialog dlg = (AlertDialog) dialog;
                         String status = ((TextView) dlg.findViewById(R.id.add_friend_edit_text)).getText().toString();
-//                        if(status.isEmpty()){
-//                            //TODO : empty status
-//                            return ;
-//                        }
                         Utils.getUser(mCurrentUserEmail).child("status").setValue(status);
                     }
                 }).setNegativeButton("Cancel", null);
-
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
@@ -209,10 +220,8 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 
-    //TODO : tabView
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new ChatListFragment());
@@ -246,10 +255,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError firebaseError) {
                 Toast.makeText(MainActivity.this, "Error : this Email isn't Registered", Toast.LENGTH_LONG).show();
-
             }
         });
-
     }
 
     private void startGroupChatAction(String chatName, ArrayList<String> emails) {
@@ -257,9 +264,8 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference newChatRoom = groupChat.push();
         newChatRoom.setValue(new GroupChat(chatName, emails));
         final String roomKey = newChatRoom.getKey();
-        currentUser.getGroupChatRoomId().add(roomKey);
-        Utils.getUser(mCurrentUserEmail).setValue(currentUser);
         for(int i=0;i<emails.size();i++){
+
             final String friendEmail = emails.get(i);
             Utils.getUser(friendEmail).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -290,55 +296,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
-
-//    private void notification() {
-//        for (int i = 1; i < currentUser.getChatRoomId().size(); i++) {
-//            DatabaseReference mFirebaseRef = Utils.getChat(currentUser.getChatRoomId().get(i));
-//            mFirebaseRef.keepSynced(true);
-//            final int finalI = i;
-//            mFirebaseRef.addChildEventListener(new ChildEventListener() {
-//                @Override
-//                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                    //TODO :notification
-//                    ChatMessage newMessage = dataSnapshot.getValue(ChatMessage.class);
-//                    if (!newMessage.isNotified() && !mCurrentUserEmail.equals(newMessage.getSenderEmail())) {
-//                        Utils.showNotification(MainActivity.this, createNewMessageIntent(), "New Messeage From " + newMessage.getName(), newMessage.getMessage(), currentUser.getChatRoomId().get(finalI).hashCode());
-//                        Map<String, Object> notifiedMessage = new HashMap<>();
-//                        notifiedMessage.put("notified", true);
-//                        dataSnapshot.getRef().updateChildren(notifiedMessage);
-//                    }
-//                }
-//
-//                @Override
-//                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//
-//                }
-//
-//                @Override
-//                public void onChildRemoved(DataSnapshot dataSnapshot) {
-//
-//                }
-//
-//                @Override
-//                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//                }
-//
-//                @Override
-//                public void onCancelled(DatabaseError firebaseError) {
-//
-//                }
-//
-//                private Intent createNewMessageIntent() {
-//                    Intent intent = new Intent(MainActivity.this, ChatRoom.class);
-//                    intent.putExtra(Constants.INTENT_EXTRA_FRIEND_EMAIL, currentUser.getFriends().get(finalI));
-//                    intent.putExtra(Constants.INTENT_EXTRA_CURRENT_USER, currentUser);
-//                    intent.putExtra(Constants.INTENT_EXTRA_CURRENT_USER_EMAIL, mCurrentUserEmail);
-//                    return intent;
-//                }
-//            });
-//
-//        }
-//    }
-
 }

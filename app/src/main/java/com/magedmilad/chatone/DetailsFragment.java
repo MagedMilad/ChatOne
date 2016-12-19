@@ -2,6 +2,7 @@ package com.magedmilad.chatone;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,14 @@ public class DetailsFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public void onStart() {
+        Log.d("details","hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+
+        super.onStart();
         if (getArguments() != null) {
             email = getArguments().getString(Constants.INTENT_EXTRA_CURRENT_USER_EMAIL);
             FirebaseApp.initializeApp(getActivity());
@@ -83,6 +92,8 @@ public class DetailsFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+//        Log.d("details","hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+
         View view = inflater.inflate(R.layout.fragment_details, container, false);
 
         userName = (TextView) view.findViewById(R.id.user_name);

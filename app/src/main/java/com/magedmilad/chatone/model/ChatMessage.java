@@ -1,4 +1,4 @@
-package com.magedmilad.chatone.Model;
+package com.magedmilad.chatone.model;
 
 /**
  * Created by magedmilad on 6/10/16.

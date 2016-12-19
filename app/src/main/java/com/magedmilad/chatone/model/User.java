@@ -1,4 +1,4 @@
-package com.magedmilad.chatone.Model;
+package com.magedmilad.chatone.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;

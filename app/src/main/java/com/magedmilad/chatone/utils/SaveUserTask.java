@@ -1,4 +1,4 @@
-package com.magedmilad.chatone.Utils;
+package com.magedmilad.chatone.utils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -15,7 +15,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.magedmilad.chatone.MainActivity;
-import com.magedmilad.chatone.Model.User;
+import com.magedmilad.chatone.model.User;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
