@@ -136,6 +136,7 @@ public class Utils {
 
             @Override
             public void onCancelled(DatabaseError firebaseError) {
+                //not needed for now
             }
         });
     }

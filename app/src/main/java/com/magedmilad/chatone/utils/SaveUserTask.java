@@ -81,7 +81,7 @@ public class SaveUserTask extends AsyncTask<Uri, Void, Void> {
         UploadTask ut = photoRef.putBytes(data);
         ut.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onSuccess(com.google.firebase.storage.UploadTask.TaskSnapshot taskSnapshot) {
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Uri downloadLink = taskSnapshot.getMetadata().getDownloadUrl();
                 String link = downloadLink.toString();
                 setUser(link);
@@ -90,6 +90,7 @@ public class SaveUserTask extends AsyncTask<Uri, Void, Void> {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
+                        //not needed for now
                     }
                 });
         while(ut.isInProgress());

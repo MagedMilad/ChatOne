@@ -94,6 +94,7 @@ class FirebaseArray implements ChildEventListener {
 
     @Override
     public void onCancelled(DatabaseError firebaseError) {
+        // not needed for now
 
     }
 

@@ -27,6 +27,7 @@ public class ChatRoom extends AppCompatActivity {
     private FirebaseMessageRecyclerAdapter mAdapter;
     private String mCurrentUserEmail;
     private String mChatRoomId = "0";
+    private RecyclerView mListView;
 
     @Override
     protected void onDestroy() {
@@ -34,7 +35,6 @@ public class ChatRoom extends AppCompatActivity {
         mAdapter.cleanup();
     }
 
-    private RecyclerView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +67,7 @@ public class ChatRoom extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                // not needed for now
             }
         });
 
@@ -86,22 +87,22 @@ public class ChatRoom extends AppCompatActivity {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                // not needed for now
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                // not needed for now
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+                // not needed for now
             }
 
             @Override
             public void onCancelled(DatabaseError firebaseError) {
-
+                // not needed for now
             }
         });
 

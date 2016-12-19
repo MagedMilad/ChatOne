@@ -77,7 +77,7 @@ public class FirebaseGroupChatListAdapter extends BaseAdapter {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                //not needed for now
             }
         });
         return view;

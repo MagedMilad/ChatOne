@@ -20,9 +20,7 @@ import com.magedmilad.chatone.utils.Constants;
 import com.magedmilad.chatone.utils.Utils;
 
 public class GroupChatListFragment extends Fragment {
-    private User currentUser;
     private  String mCurrentUserEmail;
-    private ListView mGroupChatRooms;
     private FirebaseGroupChatListAdapter chatRoomAdapter;
 
 
@@ -46,7 +44,7 @@ public class GroupChatListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
-        mGroupChatRooms = (ListView) view.findViewById(R.id.chat_room_listview);
+        ListView  mGroupChatRooms = (ListView) view.findViewById(R.id.chat_room_listview);
 
         mGroupChatRooms.setAdapter(chatRoomAdapter);
 
@@ -58,7 +56,7 @@ public class GroupChatListFragment extends Fragment {
                 Utils.getUser(mCurrentUserEmail).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
-                        currentUser = snapshot.getValue(User.class);
+                        User  currentUser = snapshot.getValue(User.class);
                         Intent intent = new Intent(getActivity().getBaseContext(), GroupChatRoom.class);
                         intent.putExtra(Constants.INTENT_EXTRA_CURRENT_USER, currentUser);
                         intent.putExtra(Constants.INTENT_EXTRA_GROUP_CHAT_ROOM_ID, currentUser.getGroupChatRoomId().get(itemPos));

@@ -65,6 +65,8 @@ public class GroupChatRoom extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                // not needed for now
+
             }
         });
 
@@ -77,21 +79,25 @@ public class GroupChatRoom extends AppCompatActivity {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                // not needed for now
 
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                // not needed for now
 
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                // not needed for now
 
             }
 
             @Override
             public void onCancelled(DatabaseError firebaseError) {
+                // not needed for now
 
             }
         });

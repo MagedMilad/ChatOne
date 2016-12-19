@@ -70,17 +70,17 @@ import java.lang.reflect.InvocationTargetException;
  * </pre></blockquote>
  *
  * @param <T>  The Java class that maps to the type of objects stored in the Firebase location.
- * @param <VH> The ViewHolder class that contains the Views in the layout that is shown for each object.
+ * @param <V> The ViewHolder class that contains the Views in the layout that is shown for each object.
  */
-public abstract class FirebaseMessageRecyclerAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
+public abstract class FirebaseMessageRecyclerAdapter<T, V extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<V> {
 
     private  Class<T> mModelClass;
-    private Class<VH> mViewHolderClass;
+    private Class<V> mViewHolderClass;
     private FirebaseArray mSnapshots;
     private String mCurrentUserEmail;
 
 
-    public FirebaseMessageRecyclerAdapter(Class<T> modelClass, Class<VH> viewHolderClass, Query ref,String currentUserEmail) {
+    public FirebaseMessageRecyclerAdapter(Class<T> modelClass, Class<V> viewHolderClass, Query ref, String currentUserEmail) {
         mModelClass = modelClass;
         mViewHolderClass = viewHolderClass;
         mSnapshots = new FirebaseArray(ref);
@@ -110,7 +110,7 @@ public abstract class FirebaseMessageRecyclerAdapter<T, VH extends RecyclerView.
     }
 
 
-    public FirebaseMessageRecyclerAdapter(Class<T> modelClass, Class<VH> viewHolderClass, DatabaseReference ref,String currentUserEmail) {
+    public FirebaseMessageRecyclerAdapter(Class<T> modelClass, Class<V> viewHolderClass, DatabaseReference ref, String currentUserEmail) {
         this(modelClass, viewHolderClass, (Query) ref, currentUserEmail);
     }
 
@@ -132,6 +132,7 @@ public abstract class FirebaseMessageRecyclerAdapter<T, VH extends RecyclerView.
      * This method parses the DataSnapshot into the requested type. You can override it in subclasses
      * to do custom parsing.
      *
+     *
      * @param snapshot the DataSnapshot to extract the model from
      * @return the model extracted from the DataSnapshot
      */
@@ -150,7 +151,7 @@ public abstract class FirebaseMessageRecyclerAdapter<T, VH extends RecyclerView.
     }
 
     @Override
-    public VH onCreateViewHolder(ViewGroup parent, int viewType) {
+    public V onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewGroup view;
         if(viewType == Constants.SENDER_LAYOUT_TYPE){
             view = (ViewGroup) LayoutInflater.from(parent.getContext()).inflate(R.layout.message_sender_layout, parent, false);
@@ -159,7 +160,7 @@ public abstract class FirebaseMessageRecyclerAdapter<T, VH extends RecyclerView.
             view = (ViewGroup) LayoutInflater.from(parent.getContext()).inflate(R.layout.message_receiver_layout, parent, false);
         }
         try {
-            Constructor<VH> constructor = mViewHolderClass.getConstructor(View.class);
+            Constructor<V> constructor = mViewHolderClass.getConstructor(View.class);
             return constructor.newInstance(view);
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
@@ -173,7 +174,7 @@ public abstract class FirebaseMessageRecyclerAdapter<T, VH extends RecyclerView.
     }
 
     @Override
-    public void onBindViewHolder(VH viewHolder, int position) {
+    public void onBindViewHolder(V viewHolder, int position) {
         T model = getItem(position);
         populateViewHolder(viewHolder, model, getItemViewType(position));
     }
@@ -198,5 +199,5 @@ public abstract class FirebaseMessageRecyclerAdapter<T, VH extends RecyclerView.
      * @param model      The object containing the data used to populate the view
      * @param position   The position in the list of the view being populated
      */
-    abstract protected void populateViewHolder(VH viewHolder, T model, int position);
+    abstract protected void populateViewHolder(V viewHolder, T model, int position);
 }

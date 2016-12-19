@@ -10,6 +10,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.magedmilad.chatone.model.User;
+import com.magedmilad.chatone.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -40,7 +41,9 @@ public class SetCombinedImageTask extends AsyncTask<String[], Void, ArrayList<Bi
                     links.add(dataSnapshot.getValue(User.class).getAvatarUri());
                 }
                 @Override
-                public void onCancelled(DatabaseError databaseError) {}
+                public void onCancelled(DatabaseError databaseError) {
+                    //not needed for now
+                }
             });
         }
 

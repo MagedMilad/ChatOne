@@ -20,9 +20,7 @@ import com.magedmilad.chatone.utils.Constants;
 import com.magedmilad.chatone.utils.Utils;
 
 public class ChatListFragment extends Fragment {
-    private User currentUser;
     private  String mCurrentUserEmail;
-    private  ListView mchatRooms;
     private  FirebaseListAdapter chatRoomAdapter;
 
 
@@ -52,7 +50,7 @@ public class ChatListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
-        mchatRooms = (ListView) view.findViewById(R.id.chat_room_listview);
+        ListView mchatRooms = (ListView) view.findViewById(R.id.chat_room_listview);
 
         mchatRooms.setAdapter(chatRoomAdapter);
 
@@ -64,7 +62,7 @@ public class ChatListFragment extends Fragment {
                 Utils.getUser(mCurrentUserEmail).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
-                        currentUser = snapshot.getValue(User.class);
+                        User currentUser = snapshot.getValue(User.class);
                         Intent intent = new Intent(getActivity().getBaseContext(), ChatRoom.class);
                         intent.putExtra(Constants.INTENT_EXTRA_CURRENT_USER, currentUser);
                         intent.putExtra(Constants.INTENT_EXTRA_FRIEND_EMAIL, (String) chatRoomAdapter.getItem(itemPos));

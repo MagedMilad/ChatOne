@@ -32,7 +32,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
 class TestUtils {
-    static void logOutIfLoggedIn() {
+    static public void logOutIfLoggedIn() {
         boolean isLoggedIn = false;
         try{
             onView(withId(R.id.input_email)).perform(click());
@@ -61,7 +61,7 @@ class TestUtils {
         }
     }
 
-    static Matcher<View> withError(final String expected) {
+    static public Matcher<View> withError(final String expected) {
         return new TypeSafeMatcher<View>() {
 
             @Override
@@ -75,13 +75,13 @@ class TestUtils {
 
             @Override
             public void describeTo(Description description) {
-
+                //not needed for now
             }
         };
     }
 
 
-    static String getText(final Matcher<View> matcher) {
+    static public String getText(final Matcher<View> matcher) {
         final String[] stringHolder = { null };
         onView(matcher).perform(new ViewAction() {
             @Override
@@ -103,7 +103,7 @@ class TestUtils {
         return stringHolder[0];
     }
 
-    static Matcher<View> childAtPosition(
+    static public Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
 
         return new org.hamcrest.TypeSafeMatcher<View>() {
@@ -122,7 +122,7 @@ class TestUtils {
         };
     }
 
-    static <T> Matcher<T> first(final Matcher<T> matcher) {
+    static public <T> Matcher<T> first(final Matcher<T> matcher) {
         return new BaseMatcher<T>() {
             boolean isFirst = true;
 

@@ -9,9 +9,6 @@ public class Constants {
     public static final int GET_FROM_GALLERY=2;
 
     public static final String BASE_URL = "https://chat-one.firebaseio.com";
-    public static final String USERS_URL = BASE_URL + "/users";
-    public static final String CHAT_URL = BASE_URL + "/chat";
-    public static final String IMAGES_URL = BASE_URL + "/images";
 
     public static final String STORAGE_BUCKET_URL = "gs://firebase-chat-one.appspot.com";
 
