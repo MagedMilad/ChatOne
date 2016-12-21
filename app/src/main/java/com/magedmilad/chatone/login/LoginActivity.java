@@ -300,11 +300,8 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d("auth", "The Request has been cancelled");
                             Log.d("auth", task.getException().getMessage());
                             Utils.showErrorToast(LoginActivity.this, task.getException().getMessage());
-
                         }
-
                     }
                 });
     }
-
 }

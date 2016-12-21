@@ -35,12 +35,13 @@ public class LoginTest {
         logOutIfLoggedIn();
 
         onView(withId(R.id.input_email))
-                .perform(typeText("a@a.com"), closeSoftKeyboard());
+                .perform(typeText("mina@m.com"), closeSoftKeyboard());
         onView(withId(R.id.input_password))
                 .perform(typeText("123456"), closeSoftKeyboard());
         onView(withId(R.id.login_button)).perform(click());
         onView(withId(R.id.view_pager)).perform(swipeLeft());
-        onView(withId(R.id.email)).check(matches(withText("a@a.com")));
+        onView(withId(R.id.view_pager)).perform(swipeLeft());
+        onView(withId(R.id.email)).check(matches(withText("mina@m.com")));
     }
 
     @Test
@@ -62,7 +63,7 @@ public class LoginTest {
         logOutIfLoggedIn();
 
         onView(withId(R.id.input_email))
-                .perform(typeText("a@a.com"), closeSoftKeyboard());
+                .perform(typeText("mina@m.com"), closeSoftKeyboard());
         onView(withId(R.id.input_password))
                 .perform(typeText("sglsndks"), closeSoftKeyboard());
         onView(withId(R.id.login_button)).perform(click());

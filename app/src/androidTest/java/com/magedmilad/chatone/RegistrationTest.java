@@ -32,7 +32,8 @@ public class RegistrationTest {
     public void successfulRegistration() {
         logOutIfLoggedIn();
 
-        onView(withId(R.id.signup_text)).perform(closeSoftKeyboard(), click());
+        onView(withId(R.id.input_email)).perform(closeSoftKeyboard());
+        onView(withId(R.id.signup_text)).perform(click());
         onView(withId(R.id.input_name))
                 .perform(typeText("mina"), closeSoftKeyboard());
         onView(withId(R.id.input_email))
@@ -41,6 +42,7 @@ public class RegistrationTest {
                 .perform(typeText("123456"), closeSoftKeyboard());
         onView(withId(R.id.register_button)).perform(click());
         onView(withId(R.id.view_pager)).perform(swipeLeft());
+        onView(withId(R.id.view_pager)).perform(swipeLeft());
         onView(withId(R.id.email)).check(matches(withText("mina@m.com")));
     }
 
@@ -48,7 +50,8 @@ public class RegistrationTest {
     public void failedRegInvalidMail() {
         logOutIfLoggedIn();
 
-        onView(withId(R.id.signup_text)).perform(closeSoftKeyboard(), click());
+        onView(withId(R.id.input_email)).perform(closeSoftKeyboard());
+        onView(withId(R.id.signup_text)).perform(click());
         onView(withId(R.id.input_name))
                 .perform(typeText("mina"), closeSoftKeyboard());
         onView(withId(R.id.input_email))
@@ -70,11 +73,12 @@ public class RegistrationTest {
     public void failedRegAlreadyRegMail() {
         logOutIfLoggedIn();
 
-        onView(withId(R.id.signup_text)).perform(closeSoftKeyboard(), click());
+        onView(withId(R.id.input_email)).perform(closeSoftKeyboard());
+        onView(withId(R.id.signup_text)).perform(click());
         onView(withId(R.id.input_name))
                 .perform(typeText("mina"), closeSoftKeyboard());
         onView(withId(R.id.input_email))
-                .perform(typeText("a@a.com"), closeSoftKeyboard());
+                .perform(typeText("mina@m.com"), closeSoftKeyboard());
         onView(withId(R.id.input_password))
                 .perform(typeText("123456"), closeSoftKeyboard());
         onView(withId(R.id.register_button)).perform(click());
@@ -85,22 +89,24 @@ public class RegistrationTest {
     public void failedRegWrongPassword() {
         logOutIfLoggedIn();
 
-        onView(withId(R.id.signup_text)).perform(closeSoftKeyboard(), click());
+        onView(withId(R.id.input_email)).perform(closeSoftKeyboard());
+        onView(withId(R.id.signup_text)).perform(click());
         onView(withId(R.id.input_name))
                 .perform(typeText("mina"), closeSoftKeyboard());
         onView(withId(R.id.input_email))
                 .perform(typeText("h@h.com"), closeSoftKeyboard());
         onView(withId(R.id.input_password))
                 .perform(typeText("1254"), closeSoftKeyboard());
-        onView(withId(R.id.register_button)).perform(click());
-        onView(withId(R.id.input_password)).check(matches(withError("week password, password should be at least 6 characters")));
+        onView(withId(R.id.register_button)).perform(closeSoftKeyboard(), click());
+        onView(withId(R.id.input_password)).check(matches(withError("weak password, password should be at least 6 characters")));
     }
 
     @Test
     public void failedRegEmptyName() {
         logOutIfLoggedIn();
 
-        onView(withId(R.id.signup_text)).perform(closeSoftKeyboard(), click());
+        onView(withId(R.id.input_email)).perform(closeSoftKeyboard());
+        onView(withId(R.id.signup_text)).perform(click());
         onView(withId(R.id.input_email))
                 .perform(typeText("a@a.a"), closeSoftKeyboard());
         onView(withId(R.id.input_password))
@@ -113,7 +119,8 @@ public class RegistrationTest {
     public void failedRegEmptyEmail() {
         logOutIfLoggedIn();
 
-        onView(withId(R.id.signup_text)).perform(closeSoftKeyboard(), click());
+        onView(withId(R.id.input_email)).perform(closeSoftKeyboard());
+        onView(withId(R.id.signup_text)).perform(click());
         onView(withId(R.id.input_name))
                 .perform(typeText("mina"), closeSoftKeyboard());
         onView(withId(R.id.input_password))
@@ -126,7 +133,8 @@ public class RegistrationTest {
     public void failedRegEmptyPassword() {
         logOutIfLoggedIn();
 
-        onView(withId(R.id.signup_text)).perform(closeSoftKeyboard(), click());
+        onView(withId(R.id.input_email)).perform(closeSoftKeyboard());
+        onView(withId(R.id.signup_text)).perform(click());
         onView(withId(R.id.input_name))
                 .perform(typeText("mina"), closeSoftKeyboard());
         onView(withId(R.id.input_email))
@@ -134,6 +142,4 @@ public class RegistrationTest {
         onView(withId(R.id.register_button)).perform(click());
         onView(withId(R.id.input_password)).check(matches(withError("password can't be Empty")));
     }
-
-
 }

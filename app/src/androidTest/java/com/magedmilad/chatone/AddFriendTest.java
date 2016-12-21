@@ -36,7 +36,7 @@ public class AddFriendTest {
     public void addNewFriend() {
         logOutIfLoggedIn();
         onView(withId(R.id.input_email))
-                .perform(typeText("a@a.com"), closeSoftKeyboard());
+                .perform(typeText("mina@m.com"), closeSoftKeyboard());
         onView(withId(R.id.input_password))
                 .perform(typeText("123456"), closeSoftKeyboard());
         onView(withId(R.id.login_button)).perform(click());
@@ -47,19 +47,16 @@ public class AddFriendTest {
                 withParent(withId(R.id.setting_stack)),
                 isDisplayed())).perform(click());
         onView(withId(R.id.add_friend_edit_text))
-                .perform(typeText("b@b.com"), closeSoftKeyboard());
-        onView(allOf(withId(android.R.id.button1), withText("Ok"),
-                withParent(allOf(withClassName(is("android.widget.LinearLayout")),
-                        withParent(withClassName(is("android.widget.LinearLayout"))))),
-                isDisplayed())).perform(click());
-        onView(allOf(withId(R.id.friend_name_text_view), withText("mina"))).check(matches(isDisplayed()));
+                .perform(typeText("maged@onechat.com"), closeSoftKeyboard());
+        onView(withText("Ok")).perform(click());
+        onView(allOf(withId(R.id.friend_name_text_view), withText("maged"))).check(matches(isDisplayed()));
     }
 
     @Test
     public void addDuplicateFriend() {
         logOutIfLoggedIn();
         onView(withId(R.id.input_email))
-                .perform(typeText("a@a.com"), closeSoftKeyboard());
+                .perform(typeText("mina@m.com"), closeSoftKeyboard());
         onView(withId(R.id.input_password))
                 .perform(typeText("123456"), closeSoftKeyboard());
         onView(withId(R.id.login_button)).perform(click());
@@ -70,13 +67,10 @@ public class AddFriendTest {
                 withParent(withId(R.id.setting_stack)),
                 isDisplayed())).perform(click());
         onView(withId(R.id.add_friend_edit_text))
-                .perform(typeText("b@b.com"), closeSoftKeyboard());
-        onView(allOf(withId(android.R.id.button1), withText("Ok"),
-                withParent(allOf(withClassName(is("android.widget.LinearLayout")),
-                        withParent(withClassName(is("android.widget.LinearLayout"))))),
-                isDisplayed())).perform(click());
-        onView(allOf(withId(R.id.friend_name_text_view), withText("mina"))).check(matches(isDisplayed()));
-        onView(withText("You are Already Friend with b@b.com"))
+                .perform(typeText("maged@onechat.com"), closeSoftKeyboard());
+        onView(withText("Ok")).perform(click());
+        onView(allOf(withId(R.id.friend_name_text_view), withText("maged"))).check(matches(isDisplayed()));
+        onView(withText("You are Already Friend with maged@onechat.com"))
                 .inRoot(withDecorView(not(mActivityTestRule.getActivity().getWindow().getDecorView())))
                 .check(matches(isDisplayed()));
     }
@@ -87,7 +81,7 @@ public class AddFriendTest {
         logOutIfLoggedIn();
 
         onView(withId(R.id.input_email))
-                .perform(typeText("a@a.com"), closeSoftKeyboard());
+                .perform(typeText("mina@m.com"), closeSoftKeyboard());
         onView(withId(R.id.input_password))
                 .perform(typeText("123456"), closeSoftKeyboard());
         onView(withId(R.id.login_button)).perform(click());
@@ -99,10 +93,7 @@ public class AddFriendTest {
                 isDisplayed())).perform(click());
         onView(withId(R.id.add_friend_edit_text))
                 .perform(typeText("zdfhg"), closeSoftKeyboard());
-        onView(allOf(withId(android.R.id.button1), withText("Ok"),
-                withParent(allOf(withClassName(is("android.widget.LinearLayout")),
-                        withParent(withClassName(is("android.widget.LinearLayout"))))),
-                isDisplayed())).perform(click());
+        onView(withText("Ok")).perform(click());
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {

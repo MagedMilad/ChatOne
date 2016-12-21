@@ -36,11 +36,11 @@ public class chatTest {
         logOutIfLoggedIn();
 
         onView(withId(R.id.input_email))
-                .perform(typeText("a@a.com"), closeSoftKeyboard());
+                .perform(typeText("mina@m.com"), closeSoftKeyboard());
         onView(withId(R.id.input_password))
                 .perform(typeText("123456"), closeSoftKeyboard());
         onView(withId(R.id.login_button)).perform(click());
-        onView(allOf(withId(R.id.friend_name_text_view), withText("mina"))).perform(click());
+        onView(allOf(withId(R.id.friend_name_text_view), withText("maged"))).perform(click());
         onView(withId(R.id.message_text))
                 .perform(typeText("message to send"), closeSoftKeyboard());
         onView(withId(R.id.send_circular_image_view)).perform(click());
@@ -59,11 +59,11 @@ public class chatTest {
         logOutIfLoggedIn();
 
         onView(withId(R.id.input_email))
-                .perform(typeText("a@a.com"), closeSoftKeyboard());
+                .perform(typeText("mina@m.com"), closeSoftKeyboard());
         onView(withId(R.id.input_password))
                 .perform(typeText("123456"), closeSoftKeyboard());
         onView(withId(R.id.login_button)).perform(click());
-        onView(allOf(withId(R.id.friend_name_text_view), withText("mina"))).perform(click());
+        onView(allOf(withId(R.id.friend_name_text_view), withText("maged"))).perform(click());
         onView(withId(R.id.send_circular_image_view)).perform(click());
         onView(allOf(withId(R.id.message_text_view), withText(""))).check(doesNotExist());
     }

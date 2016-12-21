@@ -16,6 +16,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.magedmilad.chatone.MainActivity;
 import com.magedmilad.chatone.Model.User;
+import com.magedmilad.chatone.login.LoginActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -51,8 +52,18 @@ public class SaveUserTask extends AsyncTask<Uri, Void, Void> {
         }
 
         StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(Constants.STORAGE_BUCKET_URL);
-        StorageReference photoRef = storageRef.child("photos")
-                .child(urls[0].getLastPathSegment());
+        StorageReference photoRef ;
+
+        if(mActivity instanceof LoginActivity && urls[0].getLastPathSegment().equals("photo.jpg")){
+            photoRef = storageRef.child("photos")
+                    .child(mUserEmail);
+        }
+        else{
+            photoRef = storageRef.child("photos")
+                    .child(urls[0].getLastPathSegment());
+        }
+
+
 
         Bitmap bitmap =null;
         if(mType == FILE_URL){
